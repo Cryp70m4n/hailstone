@@ -1,3 +1,13 @@
+/*
+Made by:Cryp70m4n and AkisaRazbu
+Version:1.0
+
+USAGE:
+./hailstone
+
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -18,7 +28,6 @@
 typedef struct _argument {
 	unsigned long long number;
 	unsigned long long s;
-	bool sc;
 	bool n;
 	bool r;
 	bool check;
@@ -33,8 +42,19 @@ unsigned long long counter = 0;
 
 argument num;
 
+void blue() {
+  printf("\033[0;34m");
+}
+
+void reset() {
+  printf("\033[0m");
+}
 
 int recurse(unsigned long long numb) {
+	if(numb == 0) {
+		printf("[!] Zero dected\n");
+		exit(0);
+	}
 	if(numb == 1) {
 		printf("[!] Loop dected\n");
 		exit(0);
@@ -42,14 +62,18 @@ int recurse(unsigned long long numb) {
 
 	if(numb % 2 == 0) {
 		numb=numb / 2;
+		blue();
 		printf("[N]-Number:%llu|[C]-Counter:%llu\n", numb, counter);
+		reset();
 		counter++;
 		sleep(num.s);
 	}
 
 	else if(numb % 2 == 1) {
 		numb=numb * 3+1;
+		blue();
 		printf("[N]-Number:%llu|[C]-Counter:%llu\n", numb, counter);
+		reset();
 		counter++;
 		sleep(num.s);
 	}
@@ -94,10 +118,10 @@ int main(int argc, char ** argv){
 				}
 			}
 		}
+	}
 
-		
 
-	if(num.n == TRUE || num.r == TRUE) {
+	if(num.n == TRUE && num.r == TRUE) {
 		num.check = TRUE;
 	}
 
@@ -108,20 +132,22 @@ int main(int argc, char ** argv){
 	
 	if(num.n == FALSE && num.r == FALSE) {
 		print_failure("Missing argument\n");
-	}
-
-	if(num.r == TRUE && num.n == TRUE) {
-		print_failure("Can't use random and number argument at the same time\n");
 		return -1;
 	}
 
-
+	else {
+		if(num.r == TRUE && num.n == TRUE) {
+			print_failure("Can't use random and number argument at the same time\n");
+			return -1;
+		}
 
 		else {
-			if(num.s == 0) {
-				num.s = 1;
+			if(num.r == TRUE || num.n == TRUE) {
+				if(num.s == 0) {
+					num.s = 1;
+				}
+				recurse(num.number);
 			}
-			recurse(num.number);
 		}
 	}
 	return 0;
