@@ -27,10 +27,7 @@ USAGE:
 
 typedef struct _argument {
 	unsigned long long number;
-	unsigned long long s;
 	bool n;
-	bool r;
-	bool check;
 } argument;
 
 
@@ -51,12 +48,16 @@ void reset() {
 }
 
 int recurse(unsigned long long numb) {
+	if(numb < 0) {
+		print_failure("Number below zero\n");
+		exit(0);
+	}
 	if(numb == 0) {
-		printf("[!] Zero dected\n");
+		print_failure("Zero dected\n");
 		exit(0);
 	}
 	if(numb == 1) {
-		printf("[!] Loop dected\n");
+		print_failure("Loop dected\n");
 		exit(0);
 	}
 
@@ -66,7 +67,7 @@ int recurse(unsigned long long numb) {
 		printf("[N]-Number:%llu|[C]-Counter:%llu\n", numb, counter);
 		reset();
 		counter++;
-		sleep(num.s);
+		sleep(1);
 	}
 
 	else if(numb % 2 == 1) {
@@ -75,7 +76,7 @@ int recurse(unsigned long long numb) {
 		printf("[N]-Number:%llu|[C]-Counter:%llu\n", numb, counter);
 		reset();
 		counter++;
-		sleep(num.s);
+		sleep(1);
 	}
 
 	return recurse(numb);
@@ -95,60 +96,23 @@ int main(int argc, char ** argv){
 				sscanf(argv[i+1], "%llu", &num.number);
 				num.n = TRUE;
 			}
-
-			if (IsArgument(argv[i], "-r")) {
-				if(i >= argc - 1) {
-					num.r = TRUE;
-					num.number = rand();
-			}
-				else {
-					print_failure("-r doesn't require a value\n");
-					return -1;
-				}
-			}
-
-
-			if(IsArgument(argv[i], "-s")) {
-				if(i >= argc - 1) {
-					print_failure("-s requires an value sleep flag is now set to 1\n");
-					sscanf("1", "%llu", &num.s);
-				}
-				else {
-					sscanf(argv[i+1], "%llu", &num.s);
-				}
-			}
 		}
 	}
 
 
-	if(num.n == TRUE && num.r == TRUE) {
-		num.check = TRUE;
+	if(num.n == FALSE) {
+		print_failure("Missing argument\n");
 	}
 
-	if(num.number == 0 && num.check == TRUE) {
+	if(num.number == 0) {
 		print_failure("Number is zero\n");
-		return -1;
-	}
-	
-	if(num.n == FALSE && num.r == FALSE) {
-		print_failure("Missing argument\n");
 		return -1;
 	}
 
 	else {
-		if(num.r == TRUE && num.n == TRUE) {
-			print_failure("Can't use random and number argument at the same time\n");
-			return -1;
-		}
-
-		else {
-			if(num.r == TRUE || num.n == TRUE) {
-				if(num.s == 0) {
-					num.s = 1;
-				}
-				recurse(num.number);
-			}
-		}
+		recurse(num.number);
 	}
+
+
 	return 0;
 }
