@@ -1,10 +1,6 @@
 /*
 Made by:Cryp70m4n and AkisaRazbu
 Version:1.0
-
-USAGE:
-./hailstone
-
 */
 
 
